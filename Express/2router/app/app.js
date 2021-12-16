@@ -20,6 +20,11 @@ app.get(/\/a\d{10,}/, (req, res)=>{
   res.send('新闻页面')
 })
 
+// 动态路由
+app.get('/news/:categoryid/a:newsid', (req, res) => {
+  res.send('新闻页面:id='+req.params.newsid+',categoryid:'+req.params.categoryid)
+})
+
 app.listen(8080)
 
 module.exports = app
