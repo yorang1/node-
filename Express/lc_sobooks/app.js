@@ -1,7 +1,7 @@
-const express = require('express');
-const path = require("path")
-const sqlQuery = require("./utilsMySQL")
-const app = express();
+var express = require('express');
+var path = require("path")
+let sqlQuery = require("./lcMysql")
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,23 +38,9 @@ app.get('/',async (req,res)=>{
 })
 
 //设置分类页面的路由
-app.get("/cataory/:cataoryid", async (req, res) => {
-  let sqlStr = "select id,bookname,bookimg,author,cataory from book WHERE cataory in (SELECT category from category WHERE id = ?) limit 0,28"
+app.get("/cataory/:cataoryid",async (req,res)=>{
+  let sqlStr = "select id,bookname,bookimg,author,cataory from book WHERE cataory in (SELECT cataory from cataory WHERE id = ?) limit 0,28"
   let arr = [req.params.cataoryid];
-  let result = await sqlQuery(sqlStr,arr)
-  let options = {
-    books:Array.from(result),
-    cataorys:await getCataory()
-  }
-  res.render('bookIndex.ejs',options)
-})
-
-
-// 分类分页页面
-app.get("/cataory/:cid/page/:pid", async (req, res) => {
-  const page = parseInt(req.params.pid)
-  let sqlStr = "select id,bookname,bookimg,author,cataory from book WHERE cataory in (SELECT category from category WHERE id = ?) limit ?,28"
-  let arr = [req.params.cid,(page-1) * 28];
   let result = await sqlQuery(sqlStr,arr)
   let options = {
     books:Array.from(result),
@@ -104,7 +90,7 @@ app.get('/books/:bookid',async (req,res)=>{
 
 async function getCataory(){
   //获取所有分类
-  let sqlStr = "select * from category";
+  let sqlStr = "select * from cataory";
   let result = await sqlQuery(sqlStr);
   return Array.from(result);
 }
@@ -125,10 +111,10 @@ app.get('/c/:cid/page/:pid',async (req,res)=>{
     result = await sqlQuery(sqlStr,arr)
     sqlStr1 = "select count(id) as num  from book"
   }else{
-    sqlStr = "select id,bookname,bookimg,author,cataory from book WHERE cataory in (SELECT category from category WHERE id = ?) limit ?,28"
+    sqlStr = "select id,bookname,bookimg,author,cataory from book WHERE cataory in (SELECT cataory from cataory WHERE id = ?) limit ?,28"
     arr = [req.params.cid,(page-1)*28];
     result = await sqlQuery(sqlStr,arr)
-    sqlStr1 = "select count(id) as num  from book WHERE cataory in (SELECT category from category WHERE id = ?)"
+    sqlStr1 = "select count(id) as num  from book WHERE cataory in (SELECT cataory from cataory WHERE id = ?)"
   }
 
   
@@ -149,7 +135,7 @@ app.get('/c/:cid/page/:pid',async (req,res)=>{
     startPage,
     endPage
   }
-  res.render('bookIndexPage.ejs',options)
+  res.render('bookIndex.ejs',options)
 })
 
 module.exports = app;

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>搜索首页</title>
+  </head>
+  <body>
+    <!-- action:提交至服务器的地址 -->
+    <h1>get</h1>
+    <form action="/search" method="get">
+      <input type="text" name="searchKey" />
+      <input type="text" name="username" />
+      <button type="submit">搜索</button>
+    </form>
+
+    <h1>post</h1>
+    <form action="/searchPost" method="post">
+      <input type="text" name="username" />
+      <input type="text" name="password" />
+      <button type="submit">搜索</button>
+    </form>
+  </body>
+</html>
